@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased ">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Edit Profile</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
+    <link href="https://unpkg.com/@tailwindcss/custom-forms/dist/custom-forms.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/edit.css">
+    <!--Replace with your tailwind.css once created-->
+    <style>
+        .max-h-64 {
+            max-height: 16rem;
+        }
+        /*Quick overrides of the form input as using the CDN version*/
+        .form-input,
+        .form-textarea,
+        .form-select,
+        .form-multiselect {
+            background-color: #edf2f7;
+        }
+    </style>
+
+</head>
+<body class="leading-normal tracking-normal text-indigo-400 m-6 bg-cover bg-fixed">
+
+    <!--divider-->
+    <!-- <hr class="bg-gray-300 my-12"> -->
+
+    <!--Title-->
+    <h1 class="font-sans font-bold break-normal text-gradient-to-r from-green-400 via-pink-500 to-purple-500 px-2 pb-8 text-4xl">Edit Profile!</h1>
+
+    <!--Card-->
+    <div id='section4' class="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
+
+        <form method="post" action="/profile/edit/<%= theUser.id %> ">
+
+            <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+                    First Name
+                  </label>
+                  <input value="<%= theUser.firstName %>" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="Jane" name="theFirstName">
+                  <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
+                </div>
+                <div class="w-full md:w-1/2 px-3">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                    Last Name
+                  </label>
+                  <input value="<%= theUser.lastName %>" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" type="text" placeholder="Doe" name="theLastName">
+                </div>
+              </div>
+              <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-email">
+                    Email Address
+                  </label>
+                  <input value="<%= theUser.email %>" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-email" type="email" placeholder="name@email.com" name="theEmail">
+                  <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
+                </div>
+                <div class="w-full md:w-1/2 px-3">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-linkedin">
+                    LinkedIn
+                  </label>
+                  <input value="<%= theUser.linkedIn %>" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-linkedin" type="email" placeholder="name@linkedin.com" name="theLinkedIn">
+                  <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
+                </div>
+              </div>
+              <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="w-full px-3">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-job-title">
+                    Job Title
+                  </label>
+                  <input value="<%= theUser.jobTitle %>" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-job-title" type="text" placeholder="Ex: Project Manager" name="theJobTitle">
+                  <p class="text-gray-600 text-xs italic">Make it as long and as crazy as you'd like</p>
+                </div>
+              </div>
+              <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="w-full md:w-1/2 px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-username">
+                      Username
+                    </label>
+                    <input value="<%= theUser.username %>" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-username" type="text" placeholder="jd100" name="theUsername">
+                  </div>
+                <!-- <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-password">
+                    Password
+                  </label>
+                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-password" type="password" placeholder="******************" name="thePassword">
+                  <p class="text-gray-500 text-xs italic">Make it as long and as crazy as you'd like</p>
+                </div> -->
+              </div>
+              <div class="flex flex-wrap -mx-3 mb-2">
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-city">
+                    City
+                  </label>
+                  <input value="<%= theUser.city %>" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-city" type="text" placeholder="Albuquerque" name="theCity">
+                </div>
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
+                    State
+                  </label>
+                  <div class="relative">
+                    <select value="<%= theUser.state %>" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" name="theState">
+                      <option>Alabama</option>
+                      <option>Alaska</option>
+                      <option>Arizona</option>
+                      <option>Arkansas</option>
+                      <option>California</option>
+                      <option>Colorado</option>
+                      <option>Connecticut</option>
+                      <option>Delaware</option>
+                      <option>Florida</option>
+                      <option>Georgia</option>
+                      <option>Hawaii</option>
+                      <option>Idaho</option>
+                      <option>Illinois</option>
+                      <option>Indiana</option>
+                      <option>Iowa</option>
+                      <option>Kansas</option>
+                      <option>Kentucky</option>
+                      <option>Louisiana</option>
+                      <option>Maine</option>
+                      <option>Maryland</option>
+                      <option>Massachusetts</option>
+                      <option>Michigan</option>
+                      <option>Minnesota</option>
+                      <option>Mississippi</option>
+                      <option>Missouri</option>
+                      <option>Montana</option>
+                      <option>Nebraska</option>
+                      <option>Nevada</option>
+                      <option>New Hampshire</option>
+                      <option>New Jersey</option>
+                      <option>New Mexico</option>
+                      <option>New York</option>
+                      <option>North Carolina</option>
+                      <option>North Dakota</option>
+                      <option>Ohio</option>
+                      <option>Oklahoma</option>
+                      <option>Oregon</option>
+                      <option>Pennsylvania</option>
+                      <option>Rhode Island</option>
+                      <option>South Carolina</option>
+                      <option>South Dakota</option>
+                      <option>Tennessee</option>
+                      <option>Texas</option>
+                      <option>Utah</option>
+                      <option>Vermont</option>
+                      <option>Virginia</option>
+                      <option>Washington</option>
+                      <option>West Virginia</option>
+                      <option>Wisconsin</option>
+                      <option>Wyoming</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-zip">
+                    Zip
+                  </label>
+                  <input value="<%= theUser.zip %>" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" type="text" placeholder="90210" name="theZip">
+                </div>
+              </div>
+
+
+                <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">About Me</label>
+                <textarea value="<%= theUser.aboutMe %>" id="message" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write a brief description about yourself here..." name="theAboutMe"></textarea>
+
+
+            <div class="md:flex mb-6">
+              <div class="w3-container">
+                <!-- <h2>Image in a Circle</h2>
+                <p>The w3-circle class shapes an image to a circle:</p> -->
+                <img src="/Chapter_4/Fullstack-of-techs/public/nicole-wolf--xTBn1YBrTE-unsplash.jpg" class="w3-circle" alt="" style="width:50%">
+              </div>
+              <p>Click on the "Choose File" button to upload an image: </p>
+
+                <input type="file" id="myFile" name="filename">
+                <!-- <input type="submit"> -->
+
+
+              <!-- <form class="flex items-center space-x-6">
+                <div class="shrink-0">
+                  <img class="h-16 w-16 object-cover rounded-full" src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1361&q=80" alt="Current profile photo" />
+                </div>
+                <label class="block">
+                  <span class="sr-only">Choose profile photo</span>
+                  <input type="file" class="block w-full text-sm text-slate-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-violet-50 file:text-violet-700
+                    hover:file:bg-violet-100
+                  "/>
+                </label>
+              </form> -->
+
+                <!-- <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Upload file</label>
+                <input class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_avatar_help" id="user_avatar" type="file">
+                <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="user_avatar_help">A profile picture is useful to confirm your are logged into your account</div> -->
+
+            </div>
+
+            <div class="md:flex mb-6">
+              <div class="md:w-1/3">
+                <label class="block text-gray-600 font-bold md:text-left mb-3 md:mb-0 pr-4" for="my-age">
+                    Age
+                </label>
+                </div>
+              <div class="inline-block items-center">
+                <select value="<%= theUser.age %>" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" name="theAge">
+                  <option>18</option>
+                  <option>19</option>
+                  <option>20</option>
+                  <option>21</option>
+                  <option>22</option>
+                  <option>23</option>
+                  <option>24</option>
+                  <option>25</option>
+                  <option>26</option>
+                  <option>27</option>
+                  <option>28</option>
+                  <option>29</option>
+                  <option>30</option>
+                  <option>31</option>
+                  <option>32</option>
+                  <option>33</option>
+                  <option>34</option>
+                  <option>35</option>
+                  <option>36</option>
+                  <option>37</option>
+                  <option>38</option>
+                  <option>39</option>
+                  <option>40</option>
+                  <option>41</option>
+                  <option>42</option>
+                  <option>43</option>
+                  <option>44</option>
+                  <option>45</option>
+                  <option>46</option>
+                  <option>47</option>
+                  <option>48</option>
+                  <option>49</option>
+                  <option>50</option>
+                  <option>51</option>
+                  <option>52</option>
+                  <option>53</option>
+                  <option>54</option>
+                  <option>55</option>
+                  <option>56</option>
+                  <option>57</option>
+                  <option>58</option>
+                  <option>59</option>
+                  <option>60</option>
+                  <option>61</option>
+                  <option>62</option>
+                  <option>63</option>
+                  <option>64</option>
+                  <option>65</option>
+                  <option>66</option>
+                  <option>67</option>
+                  <option>68</option>
+                  <option>69</option>
+                  <option>70</option>
+                  <option>71</option>
+                  <option>72</option>
+                  <option>73</option>
+                  <option>74</option>
+                  <option>75</option>
+                  <option>76</option>
+                  <option>77</option>
+                  <option>78</option>
+                  <option>79</option>
+                  <option>80</option>
+                  <option>81</option>
+                  <option>82</option>
+                  <option>83</option>
+                  <option>84</option>
+                  <option>85</option>
+                  <option>86</option>
+                  <option>87</option>
+                  <option>88</option>
+                  <option>89</option>
+                  <option>90</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="md:flex mb-6">
+                <div class="md:w-1/3">
+                    <label class="block text-gray-600 font-bold md:text-left mb-3 md:mb-0 pr-4" for="my-sex">
+                        Sex
+                    </label>
+                </div>
+                <div class="md:w-2/3">
+                    <div class="mt-2">
+                        <label class="inline-flex items-center">
+                            <input type="radio" class="form-radio text-indigo-600" name="radioOption" value="Male">
+                            <span class="ml-2">Male</span>
+                        </label>
+                        <label class="inline-flex items-center ml-6">
+                            <input type="radio" class="form-radio" name="radioOption" value="Female">
+                            <span class="ml-2">Female</span>
+                        </label>
+                    </div>
+                    <!-- <p class="py-2 text-sm text-gray-600">add notes about populating the field</p> -->
+                </div>
+            </div>
+
+            <div class="md:flex mb-6">
+              <div class="md:w-1/3">
+                  <label class="block text-gray-600 font-bold md:text-left mb-3 md:mb-0 pr-4" for="my-interests">
+                      Interests
+                  </label>
+              </div>
+              <div class="md:w-2/3">
+                  <div class="mt-2">
+                      <label class="inline-flex items-center">
+                          <input type="radio" class="form-radio text-indigo-600" name="radioOption2" value="Women">
+                          <span class="ml-2">Women</span>
+                      </label>
+                      <label class="inline-flex items-center ml-6">
+                          <input type="radio" class="form-radio" name="radioOption2" value="Men">
+                          <span class="ml-2">Men</span>
+                      </label>
+                      <label class="inline-flex items-center ml-6">
+                          <input type="radio" class="form-radio" name="radioOption2" value="Both">
+                          <span class="ml-2">Both</span>
+                      </label>
+                  </div>
+                  <!-- <p class="py-2 text-sm text-gray-600">add notes about populating the field</p> -->
+              </div>
+          </div>
+
+            <!-- <div class="md:flex mb-6">
+                <div class="md:w-1/3">
+                    <label class="block text-gray-600 font-bold md:text-left mb-3 md:mb-0 pr-4" for="my-checkbox">
+                        Interests
+                    </label>
+                </div>
+                <div class="md:w-2/3">
+                    <div>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" class="form-checkbox text-indigo-600" name="checkBox" checked>
+                            <span class="ml-2">Women</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" class="form-checkbox text-green-500" name="checkBox" checked>
+                            <span class="ml-2">Men</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" class="form-checkbox text-pink-600" checked>
+                            <span class="ml-2">Both</span>
+                        </label>
+                    </div>
+                    <p class="py-2 text-sm text-gray-600">add notes about populating the field</p>
+                </div>
+            </div> -->
+
+            <div class="md:flex md:items-center">
+                <div class="md:w-1/3"></div>
+                <div class="md:w-2/3">
+                  <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+                    <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                        Edit
+                    </span>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <!--/Card-->
+
+    <!--divider-->
+    <!-- <hr class="bg-gray-300 my-12"> -->
+
+</body>
+</html>

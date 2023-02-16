@@ -1,0 +1,32 @@
+body{
+    background-image: url(/lukasz-szmigiel-jFCViYFYcus-unsplash.jpg);
+    background-size: 100%;
+    /* background-color: black; */
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    margin-top: 60px;
+    color: aliceblue;
+    font-size: 40px;
+}
+
+table {
+    margin-bottom: 15px;
+}
+
+#dashboard-tab {
+    color:white;
+}
+
+#dashboard-tab:hover {
+    color:blue;
+}
+
+#profile-tab:hover {
+    color:blue;
+}
