@@ -1,6 +1,6 @@
 {
   "development": {
-    "username": "",
+    "username": "amp",
     "password": null,
     "database": "fullstack-of-techs",
     "host": "127.0.0.1",

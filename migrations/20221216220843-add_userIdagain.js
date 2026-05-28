@@ -3,12 +3,11 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
+    const table = await queryInterface.describeTable('Tasks');
+    if (table.userId) {
+      return;
+    }
+
     await queryInterface.addColumn('Tasks', 'userId', {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',
@@ -21,11 +20,5 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
   }
 };

@@ -4,7 +4,7 @@ const portNumber = 3000;
 const bodyParser = require("body-parser");
 const Sequelize = require("sequelize");
 const { User, Admin, Task, DM } = require("./models");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
@@ -114,6 +114,10 @@ app.post("/verification", async function(req, res){
             username: theUsername
         }
     });
+    if(!theUserInfo){
+        res.redirect("/");
+        return;
+    }
     let theResult = await bcrypt.compare(thePassword, theUserInfo.password);
     if(theResult){
         req.session.user = theUserInfo;
@@ -149,6 +153,10 @@ app.post("/adminlogin/verification", async function(req, res){
             username: theUsername
         }
     });
+    if(!theAdminInfo){
+        res.redirect("/adminlogin");
+        return;
+    }
     if(thePassword == theAdminInfo.password){
         req.session.admin = theAdminInfo;
         // console.log(req.session.admin);

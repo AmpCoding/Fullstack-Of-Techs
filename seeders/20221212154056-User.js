@@ -1,5 +1,7 @@
 'use strict';
 
+const bcrypt = require('bcryptjs');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -12,6 +14,8 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+   const hashedPassword = await bcrypt.hash('test1234', 10);
+
    await queryInterface.bulkInsert('Users', [
     {
       firstName: "Boris",
@@ -20,7 +24,7 @@ module.exports = {
       linkedIn: "bw@linkein.com",
       jobTitle: "Project Manager",
       username: "bwilliams",
-      password: "test1234",
+      password: hashedPassword,
       city: "New York",
       state: "New York",
       zip: 10001,
@@ -39,7 +43,7 @@ module.exports = {
       linkedIn: "wc@linkein.com",
       jobTitle: "Frontend Developer",
       username: "wcarter",
-      password: "test1234",
+      password: hashedPassword,
       city: "Philadelphia",
       state: "Pennsylvania",
       zip: 19131,
@@ -58,7 +62,7 @@ module.exports = {
       linkedIn: "bj@linkein.com",
       jobTitle: "Data Analyst",
       username: "bjohnson",
-      password: "test1234",
+      password: hashedPassword,
       city: "Wilmington",
       state: "Delaware",
       zip: 19803,
@@ -77,7 +81,7 @@ module.exports = {
       linkedIn: "og@linkein.com",
       jobTitle: "Backend Developer",
       username: "ogarcia",
-      password: "test1234",
+      password: hashedPassword,
       city: "Jersey City",
       state: "New Jersey",
       zip: 57030,
@@ -96,7 +100,7 @@ module.exports = {
       linkedIn: "fw@linkein.com",
       jobTitle: "UI/UX Designer",
       username: "fwright",
-      password: "test1234",
+      password: hashedPassword,
       city: "Miami",
       state: "Florida",
       zip: 33101,
@@ -115,7 +119,7 @@ module.exports = {
       linkedIn: "sj@linkein.com",
       jobTitle: "Salesforce Administrator",
       username: "sjones",
-      password: "test1234",
+      password: hashedPassword,
       city: "Denver",
       state: "Colorado",
       zip: 80014,
@@ -134,7 +138,7 @@ module.exports = {
       linkedIn: "jb@linkein.com",
       jobTitle: "Cloud Architect",
       username: "jblaze",
-      password: "test1234",
+      password: hashedPassword,
       city: "Baltimore",
       state: "Maryland",
       zip: 21201,
@@ -153,7 +157,7 @@ module.exports = {
       linkedIn: "cd@linkein.com",
       jobTitle: "Mobile App Developer",
       username: "cdavis",
-      password: "test1234",
+      password: hashedPassword,
       city: "Las Vegas",
       state: "Nevada",
       zip: 88901,
@@ -172,7 +176,7 @@ module.exports = {
       linkedIn: "tb@linkein.com",
       jobTitle: "Sevice Now Developer",
       username: "tbrown",
-      password: "test1234",
+      password: hashedPassword,
       city: "Atlanta",
       state: "Georgia",
       zip: 30033,
@@ -191,7 +195,7 @@ module.exports = {
       linkedIn: "as@linkein.com",
       jobTitle: "Cybersecurity Analyst",
       username: "asmith",
-      password: "test1234",
+      password: hashedPassword,
       city: "San Francisco",
       state: "California",
       zip: 94016,
