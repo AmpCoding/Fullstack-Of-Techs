@@ -8,7 +8,35 @@ const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 let thePhrase = "Hey there, Fullstack of Techs!";
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+        folder: "fullstack-of-techs/profile-photos",
+        allowed_formats: ["jpg", "jpeg", "png", "webp"]
+    }
+});
+
+const upload = multer({
+    storage,
+    fileFilter: function(req, file, cb) {
+        if(file.mimetype.startsWith("image/")) {
+            cb(null, true);
+            return;
+        }
+        cb(new Error("Only image files are allowed"));
+    }
+});
+
 app.use(bodyParser.urlencoded({ extended : true}));
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -56,8 +84,8 @@ app.get("/signup", async function(req, res){
 // Signup page information that gets stored to the database
 // Hashing the password using bcrypt (redirected back to login page)
 // Everytime a new user sign ups for an account, a new task is sent to the admin to verify the user works in tech
-app.post("/signup", async function(req, res){
-    const { theFirstName, theLastName, theEmail, theLinkedIn, theJobTitle, theUsername, thePassword, theCity, theState, theZip, theAboutMe, filename, theAge, radioOption, radioOption2 } = req.body;
+app.post("/signup", upload.single("profileImage"), async function(req, res){
+    const { theFirstName, theLastName, theEmail, theLinkedIn, theJobTitle, theUsername, thePassword, theCity, theState, theZip, theAboutMe, theAge, radioOption, radioOption2 } = req.body;
     // console.log(req.body);
     let theHashedPassword = await bcrypt.hash(thePassword, 10);
     // const { id } = req.params;
@@ -74,7 +102,7 @@ app.post("/signup", async function(req, res){
         state: theState,
         zip: theZip,
         aboutMe: theAboutMe,
-        image: filename,
+        image: req.file ? req.file.path : null,
         age: theAge,
         sex: radioOption,
         interests: radioOption2,
@@ -229,13 +257,13 @@ app.get("/profile/edit/:id", async function(req, res){
 })
 
 // The updated user's information that gets stored to the database and redirected back to the user's profile page
-app.post("/profile/edit/:pkid", async function(req, res){
+app.post("/profile/edit/:pkid", upload.single("profileImage"), async function(req, res){
     // console.log("I have arrived at the post");
     const { pkid } = req.params;
     // console.log(pkid);
     // console.log(req.params);
-    const { theFirstName, theLastName, theEmail, theLinkedIn, theJobTitle, theUsername, theCity, theState, theZip, theAboutMe, filename, theAge, radioOption, radioOption2} = req.body;
-    let editUser = await User.update({
+    const { theFirstName, theLastName, theEmail, theLinkedIn, theJobTitle, theUsername, theCity, theState, theZip, theAboutMe, theAge, radioOption, radioOption2} = req.body;
+    let userUpdates = {
         firstName: theFirstName,
         lastName: theLastName,
         email: theEmail,
@@ -246,12 +274,17 @@ app.post("/profile/edit/:pkid", async function(req, res){
         state: theState,
         zip: theZip,
         aboutMe: theAboutMe,
-        image: filename,
         age: theAge,
         sex: radioOption,
         interests: radioOption2,
         updatedAt: new Date()
-    },
+    };
+
+    if(req.file) {
+        userUpdates.image = req.file.path;
+    }
+
+    let editUser = await User.update(userUpdates,
     {
         where: {
             id: pkid
