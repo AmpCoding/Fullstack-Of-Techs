@@ -22,12 +22,15 @@ const storage = new CloudinaryStorage({
     cloudinary,
     params: {
         folder: "fullstack-of-techs/profile-photos",
-        allowed_formats: ["jpg", "jpeg", "png", "webp"]
+        allowed_formats: ["jpg", "jpeg", "png", "webp", "heic", "heif"]
     }
 });
 
 const upload = multer({
     storage,
+    limits: {
+        fileSize: 10 * 1024 * 1024
+    },
     fileFilter: function(req, file, cb) {
         if(file.mimetype.startsWith("image/")) {
             cb(null, true);
@@ -51,6 +54,11 @@ function logUploadError(routeName, err) {
 }
 
 function sendUploadErrorResponse(res, err) {
+    if(err instanceof multer.MulterError && err.code === "LIMIT_FILE_SIZE") {
+        res.status(400).send("Profile photo must be under 10MB.");
+        return;
+    }
+
     if(err instanceof multer.MulterError || (err && err.message === "Only image files are allowed")) {
         res.status(400).send("Profile photo upload failed. Please upload a valid image file.");
         return;
