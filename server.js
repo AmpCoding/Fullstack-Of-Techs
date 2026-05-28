@@ -37,6 +37,40 @@ const upload = multer({
     }
 });
 
+function logUploadError(routeName, err) {
+    console.error(routeName + " upload error", {
+        message: err && err.message,
+        stack: err && err.stack,
+        name: err && err.name,
+        code: err && err.code,
+        field: err && err.field,
+        storageErrors: err && err.storageErrors,
+        http_code: err && err.http_code,
+        error: err && err.error
+    });
+}
+
+function sendUploadErrorResponse(res, err) {
+    if(err instanceof multer.MulterError || (err && err.message === "Only image files are allowed")) {
+        res.status(400).send("Profile photo upload failed. Please upload a valid image file.");
+        return;
+    }
+
+    res.status(502).send("Profile photo upload failed while saving the image. Please try again.");
+}
+
+function uploadProfileImage(req, res) {
+    return new Promise(function(resolve, reject) {
+        upload.single("profileImage")(req, res, function(err) {
+            if(err) {
+                reject(err);
+                return;
+            }
+            resolve();
+        });
+    });
+}
+
 app.use(bodyParser.urlencoded({ extended : true}));
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -84,44 +118,60 @@ app.get("/signup", async function(req, res){
 // Signup page information that gets stored to the database
 // Hashing the password using bcrypt (redirected back to login page)
 // Everytime a new user sign ups for an account, a new task is sent to the admin to verify the user works in tech
-app.post("/signup", upload.single("profileImage"), async function(req, res){
-    const { theFirstName, theLastName, theEmail, theLinkedIn, theJobTitle, theUsername, thePassword, theCity, theState, theZip, theAboutMe, theAge, radioOption, radioOption2 } = req.body;
-    // console.log(req.body);
-    let theHashedPassword = await bcrypt.hash(thePassword, 10);
-    // const { id } = req.params;
-    // console.log(theUsers);
-    let newUser = await User.create({
-        firstName: theFirstName,
-        lastName: theLastName,
-        email: theEmail,
-        linkedIn: theLinkedIn,
-        jobTitle: theJobTitle,
-        username: theUsername,
-        password: theHashedPassword,
-        city: theCity,
-        state: theState,
-        zip: theZip,
-        aboutMe: theAboutMe,
-        image: req.file ? req.file.path : null,
-        age: theAge,
-        sex: radioOption,
-        interests: radioOption2,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        verified_users: false
-    })
-    // console.log(newUser);
-    // console.log(newUser.dataValues.id);
-    // let theUsers = await User.findByPk(id);
-    let newTask = await Task.create({
-        adminId: 2,
-        taskName: "Verify User",
-        userId: newUser.dataValues.id,
-        complete: false,
-        createdAt: new Date(),
-        updatedAt: new Date()
-    })
-    res.redirect("/");
+app.post("/signup", async function(req, res){
+    try {
+        await uploadProfileImage(req, res);
+    } catch(err) {
+        logUploadError("Signup", err);
+        sendUploadErrorResponse(res, err);
+        return;
+    }
+
+    try {
+        const { theFirstName, theLastName, theEmail, theLinkedIn, theJobTitle, theUsername, thePassword, theCity, theState, theZip, theAboutMe, theAge, radioOption, radioOption2 } = req.body;
+        // console.log(req.body);
+        let theHashedPassword = await bcrypt.hash(thePassword, 10);
+        // const { id } = req.params;
+        // console.log(theUsers);
+        let newUser = await User.create({
+            firstName: theFirstName,
+            lastName: theLastName,
+            email: theEmail,
+            linkedIn: theLinkedIn,
+            jobTitle: theJobTitle,
+            username: theUsername,
+            password: theHashedPassword,
+            city: theCity,
+            state: theState,
+            zip: theZip,
+            aboutMe: theAboutMe,
+            image: req.file ? req.file.path : null,
+            age: theAge,
+            sex: radioOption,
+            interests: radioOption2,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            verified_users: false
+        })
+        // console.log(newUser);
+        // console.log(newUser.dataValues.id);
+        // let theUsers = await User.findByPk(id);
+        let newTask = await Task.create({
+            adminId: 2,
+            taskName: "Verify User",
+            userId: newUser.dataValues.id,
+            complete: false,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        })
+        res.redirect("/");
+    } catch(err) {
+        console.error("Signup route error", {
+            message: err && err.message,
+            stack: err && err.stack
+        });
+        res.status(500).send("Signup failed. Please try again.");
+    }
 })
 
 
@@ -257,40 +307,58 @@ app.get("/profile/edit/:id", async function(req, res){
 })
 
 // The updated user's information that gets stored to the database and redirected back to the user's profile page
-app.post("/profile/edit/:pkid", upload.single("profileImage"), async function(req, res){
-    // console.log("I have arrived at the post");
+app.post("/profile/edit/:pkid", async function(req, res){
     const { pkid } = req.params;
-    // console.log(pkid);
-    // console.log(req.params);
-    const { theFirstName, theLastName, theEmail, theLinkedIn, theJobTitle, theUsername, theCity, theState, theZip, theAboutMe, theAge, radioOption, radioOption2} = req.body;
-    let userUpdates = {
-        firstName: theFirstName,
-        lastName: theLastName,
-        email: theEmail,
-        linkedIn: theLinkedIn,
-        jobTitle: theJobTitle,
-        username: theUsername,
-        city: theCity,
-        state: theState,
-        zip: theZip,
-        aboutMe: theAboutMe,
-        age: theAge,
-        sex: radioOption,
-        interests: radioOption2,
-        updatedAt: new Date()
-    };
 
-    if(req.file) {
-        userUpdates.image = req.file.path;
+    try {
+        await uploadProfileImage(req, res);
+    } catch(err) {
+        logUploadError("Profile edit", err);
+        sendUploadErrorResponse(res, err);
+        return;
     }
 
-    let editUser = await User.update(userUpdates,
-    {
-        where: {
-            id: pkid
+    try {
+        // console.log("I have arrived at the post");
+        // console.log(pkid);
+        // console.log(req.params);
+        const { theFirstName, theLastName, theEmail, theLinkedIn, theJobTitle, theUsername, theCity, theState, theZip, theAboutMe, theAge, radioOption, radioOption2} = req.body;
+        let userUpdates = {
+            firstName: theFirstName,
+            lastName: theLastName,
+            email: theEmail,
+            linkedIn: theLinkedIn,
+            jobTitle: theJobTitle,
+            username: theUsername,
+            city: theCity,
+            state: theState,
+            zip: theZip,
+            aboutMe: theAboutMe,
+            age: theAge,
+            sex: radioOption,
+            interests: radioOption2,
+            updatedAt: new Date()
+        };
+
+        if(req.file) {
+            userUpdates.image = req.file.path;
         }
-    });
-    res.redirect("/profile/" + pkid);
+
+        let editUser = await User.update(userUpdates,
+        {
+            where: {
+                id: pkid
+            }
+        });
+        res.redirect("/profile/" + pkid);
+    } catch(err) {
+        console.error("Profile edit route error", {
+            message: err && err.message,
+            stack: err && err.stack,
+            userId: pkid
+        });
+        res.status(500).send("Profile update failed. Please try again.");
+    }
 })
 
 // Rendering a form for a user to initaite a message to another user
